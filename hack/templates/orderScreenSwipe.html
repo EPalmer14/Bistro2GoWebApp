@@ -23,6 +23,7 @@
         }
     </style>
 </head>
+<p>You selected: {{ selected_option }}</p>
 <body>
     <div class="container">
         <h1>Welcome to the Clark University Bistro Food Ordering System!</h1>
@@ -129,14 +130,43 @@
             "Vegetable Lasagna": 6.99,
             "Chicken Parmesan": 7.99
         };
-
+    
+        let sides = {
+            "French Fries": 2.99,
+            "Onion Rings": 3.49,
+            "Coleslaw": 1.99,
+            "Mashed Potatoes": 2.79,
+            "Sweet Potato Fries": 3.29,
+            "Garlic Bread": 2.49,
+            "Side Salad": 2.99,
+            "Steamed Vegetables": 3.59,
+            "Rice Pilaf": 2.89,
+            "Corn on the Cob": 1.99,
+            "Macaroni and Cheese": 3.49,
+            "Grilled Asparagus": 3.79,
+            "Breaded Mozzarella Sticks": 4.29,
+            "Fruit Salad": 3.99,
+            "Roasted Potatoes": 2.99
+        };
+    
         function addItem() {
             const item = document.getElementById('item').value;
             const quantity = parseInt(document.getElementById('quantity').value);
 
-            if (order[item]) {
-                order[item] += quantity;
-            } else {
+            // Check if the selected item is a meal or a side
+            const isMeal = menu[item] !== undefined;
+            const isSide = sides[item] !== undefined;
+
+            // Count the number of meals and sides in the order
+            const mealCount = Object.keys(order).filter(item => menu[item] !== undefined).length;
+            const sideCount = Object.keys(order).filter(item => sides[item] !== undefined).length;
+
+            // If the selected item is a meal, it is not in the order, and there are fewer than one meal in the order, add it to the order
+            if (isMeal && mealCount === 0) {
+                order[item] = quantity;
+            } 
+            // If the selected item is a side, it is not in the order, and there are fewer than two sides in the order, add it to the order
+            else if (isSide && sideCount < 2) {
                 order[item] = quantity;
             }
 
@@ -150,7 +180,7 @@
             let totalCost = 0;
 
             for (const item in order) {
-                const price = parseFloat(menu[item]);
+                const price = isMeal(item) ? menu[item] : sides[item];
                 const quantity = order[item];
                 totalCost += price * quantity;
                 summaryHTML += `<li>${item}: ${quantity}</li>`;
@@ -160,6 +190,12 @@
             totalCostElement.textContent = totalCost.toFixed(2);
         }
 
+        // Function to check if an item is a meal
+        function isMeal(item) {
+            return menu[item] !== undefined;
+        }
+
+    
         function processOrder() {
             // Add logic here to process the order, e.g., sending it to a server, etc.
             alert('Order processed successfully!');
@@ -168,6 +204,7 @@
             updateOrderSummary();
         }
     </script>
+    
 
     <p>Click the button below to go to the home page.</p>
     <a href="{% url 'index' %}" class="btn btn-primary">Login</a>
