@@ -29,7 +29,7 @@
         <h1>Welcome to the Clark University Bistro Food Ordering System!</h1>
 
         <div class="menu-column">
-            <h2>Meals</h2>
+            <h2>Dish</h2>
             <div class="menu-item">Bagel with Cream Cheese: $3.99</div>
             <div class="menu-item">Breakfast Sandwich: $5.99</div>
             <div class="menu-item">2 Eggs any style: $6.49</div>
@@ -160,14 +160,21 @@
             // Count the number of meals and sides in the order
             const mealCount = Object.keys(order).filter(item => menu[item] !== undefined).length;
             const sideCount = Object.keys(order).filter(item => sides[item] !== undefined).length;
+            
+
 
             // If the selected item is a meal, it is not in the order, and there are fewer than one meal in the order, add it to the order
-            if (isMeal && mealCount === 0) {
+            if (isMeal && mealCount === 0 && sideCount < 3) {
                 order[item] = quantity;
             } 
             // If the selected item is a side, it is not in the order, and there are fewer than two sides in the order, add it to the order
             else if (isSide && sideCount < 2) {
                 order[item] = quantity;
+            }
+            else if (isSide && sideCount < 3) {
+                if (mealCount == 0) {
+                    order[item] = quantity
+                }
             }
 
             updateOrderSummary();
