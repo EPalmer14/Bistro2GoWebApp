@@ -11,5 +11,6 @@ from . import views
 app_name = "order"
 
 urlpatterns = [
-    path('', views.index, name='order'),  
+    path('', views.index, name='order'),
+    path('swipe/', views.swipe, name='swipe')  
 ]

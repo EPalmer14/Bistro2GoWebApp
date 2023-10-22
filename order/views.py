@@ -4,3 +4,6 @@ from django.shortcuts import render
 
 def index(request):
     return render(request, 'orderScreen.html')
+
+def swipe(request):
+    return render(request, 'orderScreenSwipe.html')
